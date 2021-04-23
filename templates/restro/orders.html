@@ -1,0 +1,83 @@
+{% extends 'restro/base.html'%} {%block body%}
+<h2 class="offset-md-5 my-3">Orders</h2>
+<div class="container my-3">
+
+    <div class="col-md-12 ">
+        {% for i in orders %}
+        <input type="hidden" value="{{i.item}}" id="itemspr{{i.id}}">
+        <div class="card mb-3">
+            <h5 class="card-header">For {{i.customer.user.first_name}} {{i.customer.user.last_name}}<small style="text-align:right;float:right;text-size:10px;">Order on: {{i.date}}</h5></small>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-10">
+
+                            <h6 class="card-title"> Food is being prepared</h6>
+                            <p>Customer Phone Numer: +91 {{i.customer.phone}}</p>
+                            <p>Valet Name: {{i.valet.user.first_name}} {{i.valet.user.last_name}}</p>
+                            <p>Valet Phone Numer: +91 {{i.valet.phone}}</p>
+
+                        </div>
+                        <div class="col-md-2 divpr">
+                            <button class="btn btn-success cart" id="pr{{i.id}}">View order
+
+                            </button>
+                        </div>
+                    </div>
+                    <div class=" card-text ">
+                        <ul class="list-group mb-3 " id="itpr{{i.id}}">
+                        </ul>
+                        <div class="row">
+                            {%if not i.prepared %}
+                            <div class="d-grid gap-2">
+                                <a href="/restro/prepared/{{i.id}}" class="btn btn-warning">Food Prepared</a>
+                            </div>
+                            {%else%}
+                            <div>
+                                <form action="/restro/complete/{{i.id}}" method="POST">{%csrf_token%}
+                                    <input type="password" placeholder="OTP" name="otp" required>
+                                <button class="btn btn-danger" type="submit">Delivered</button> </form>
+                            </div> {%endif%}
+                        </div>
+
+
+
+                        <small>Contact our delivery agent for further enquiry</small>
+                    </div>
+
+                </div>
+        </div>
+
+
+        {%endfor%}
+    </div>
+    {%endblock%} {% block js %}
+    <script>
+        function viewCart(vert, idstr) {
+            cart = JSON.parse(vert);
+
+            mystr = ``;
+            for (var item in cart) {
+
+                let name = cart[item][1];
+                let qty = cart[item][0];
+                let itemPrice = cart[item][2];
+
+                mystr = mystr + ` <li class="list-group-item d-flex justify-content-between align-items-center">
+            ${name}
+            <span>x${qty}</span>
+          <div class="input-group-prepend">
+            <span class="input-group-text">Rs. ${itemPrice}</span>
+          </div>
+          </li>`
+            }
+            $('#it' + idstr).html(mystr);
+
+        }
+        $('.divpr').on('click', 'button.cart', function() {
+            var idstr = this.id.toString();
+            var cart = document.getElementById('items' + idstr).value;
+            viewCart(cart, idstr);
+
+        });
+    </script>
+    {%endblock%}

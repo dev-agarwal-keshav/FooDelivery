@@ -1,0 +1,77 @@
+{%extends 'customer/base.html' %} {%block body%}
+
+<div class="container">
+    <div class="col my-4">
+        <h2>Step-1 Express Checkout- Review Your Cart</h2>
+        <div>
+            <ul class="list-group my-4" id="items">
+            </ul>
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Your cart total <b> Rs. <span id="totalPrice">0</span>/-</b></li>
+                </ol>
+            </nav>
+            <div class="row">
+                <div class="col-md-6 offset-md-3 d-grid gap-2">
+                    <form method="post" action="/customer/order">{%csrf_token%}
+                        <input type="hidden" name="itemsJson" id="itemsJson">
+                        <input type="hidden" name="amount" id="amount">
+                        <input type="hidden" name="restro_name" id="user_log" value="{{user_log}}">
+                        <button class="btn btn-warning" type="submit" style="text-align:center" onclick="clearcart()">Place Order</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{%endblock%} {% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+
+
+    }
+    var sum = 0;
+    var totalPrice = 0;
+    if ($.isEmptyObject(cart)) {
+        //if empty
+        mystr = `<p>Your cart is empty. Please add items.</p>`;
+        $('#items').append(mystr);
+    } else {
+        for (var item in cart) {
+
+            let name = cart[item][1];
+            let qty = cart[item][0];
+            let itemPrice = cart[item][2];
+            sum = sum + qty;
+            totalPrice = totalPrice + qty * itemPrice;
+            mystr = ` <li class="list-group-item d-flex justify-content-between align-items-center">
+    ${name}
+    <span>x${qty}</span>
+
+  <div class="input-group-prepend">
+    <span class="input-group-text">Rs. ${itemPrice}</span>
+  </div>
+  </li>`
+            $('#items').append(mystr);
+        }
+
+
+    }
+
+
+    document.getElementById('totalPrice').innerHTML = `${totalPrice}`;
+    $('#itemsJson').val(JSON.stringify(cart));
+
+    $('#amount').val($('#totalPrice').html())
+
+    function clearcart() {
+        localStorage.clear()
+    }
+</script>
+{% endblock %}

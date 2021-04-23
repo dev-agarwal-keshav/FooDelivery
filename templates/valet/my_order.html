@@ -1,0 +1,71 @@
+{% extends 'valet/base.html'%} {%block body%}
+<div class="container my-3">
+    <div class="col-md-12 ">
+
+
+        <div class="card mb-3">
+            <h5 class="card-header">For {{i.customer.user.first_name}} {{i.customer.user.last_name}}<small style="text-align:right;float:right;text-size:10px;">Order on: {{i.date}}</h5></small>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card-title row">
+
+                            <h6 class="col-md-6">{%if not i.recv_by_valet%} {%if i.prepared%} Food has been prepared. Collect it! {%else%}Food is being prepared by: {{i.restro.name}}{%endif%}</h6>
+                            <h4 class="col-md-6" style="text-align: right;">Use OTP: {{i.otp_restro}}</h4>
+                            {%else%}
+                            <h6>Deliver it ASAP!</h6>
+                            {%endif%}
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <p>Restaurant Phone Numer: +91 {{i.restro.phone}}</p>
+                            <h6>Pickup address:
+                            </h6>
+                            <p>{{i.restro.address}}</p>
+                            <p>{{i.restro.city}}-{{i.restro.zipcode}}</p>
+                            <p>{{i.restro.state}}</p>
+
+
+                        </div>
+                        <div class="col-md-6" style="text-align: right;">
+
+                            <h6 class="card-title"></h6>
+                            <p>Customer Phone Numer: +91 {{i.customer.phone}}</p>
+                            <h6>Drop address:
+                            </h6>
+                            <p>{{i.customer.address}}</p>
+                            <p>{{i.customer.city}}-{{i.customer.zipcode}}</p>
+                            <p>{{i.customer.state}}</p>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 offset-md-4 mb-3">
+                        <h6> Amount payable= Rs.
+                            <span style="size: 20px;"> {{i.amt}}</span></h6>
+
+                    </div>
+                    {%if i.recv_by_valet%}
+                    <div class="col-md-6 offset-md-3">
+                        <form action="/valet/complete/{{i.id}}" method="POST">{%csrf_token%}
+                            <div class="input-group mb-3">
+                                <input type="password" class="form-control" placeholder="OTP" name="otp" aria-describedby="button-addon2">
+                                <button class="btn btn-danger" type="submit" id="button-addon2">Delivered</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                {%endif%}
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+</div>
+</div>
+{%endblock%}

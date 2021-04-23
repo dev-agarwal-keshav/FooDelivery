@@ -1,0 +1,57 @@
+{% extends 'valet/base.html'%} {%block body%}
+<div class="container my-3">
+    <div class="col-md-12 ">
+        {% for i in orders %}
+        <input type="hidden" value="{{i.item}}" id="itemspr{{i.id}}">
+        <div class="card mb-3">
+            <h5 class="card-header">From {{i.restro.name}}<small style="text-align:right;float:right;text-size:10px;">Order on: {{i.date}}</h5></small>
+                <div class="card-body">
+                    <div class="row">
+                        <h6 class="card-title">
+                            {%if i.recv_by_valet%} Delivery in progress {%else%}Food is being prepared by: {{i.restro.name}}{%endif%}
+                        </h6>
+                        <div class="col-md-6">
+
+
+                            <p>Restaurant Phone Numer: +91 {{i.restro.phone}}</p>
+                            <h6>Pickup address:
+                            </h6>
+                            <p>{{i.restro.address}}</p>
+                            <p>{{i.restro.city}}-{{i.restro.zipcode}}</p>
+                            <p>{{i.restro.state}}</p>
+
+
+                        </div>
+                        <div class="col-md-6" style="text-align: right;">
+
+                            <h6 class="card-title"></h6>
+
+                            <h6>Drop address:
+                            </h6>
+                            <p>{{i.customer.address}}</p>
+                            <p>{{i.customer.city}}-{{i.customer.zipcode}}</p>
+                            <p>{{i.customer.state}}</p>
+
+                        </div>
+
+                    </div>
+                    <div class=" card-text ">
+
+
+                        <div class="d-grid gap-2">
+
+                            <a href="/valet/accept/{{i.id}}" class="btn btn-warning">Accept</a>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+        </div>
+
+
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}

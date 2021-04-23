@@ -1,0 +1,80 @@
+{%extends 'customer/base.html' %}
+{%block cityscript%}
+ <script src="https://firebasestorage.googleapis.com/v0/b/foodelivery-682b7.appspot.com/o/Js%2Fcities.js?alt=media&token=52d3dfec-a505-4493-8b2a-9aa187c801df"></script>
+{%endblock%}
+
+{%block body%}
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+    <form action="/customer/register" method="post">{% csrf_token %}
+    <fieldset style="border:solid 1px gray; padding:20px;">
+        <h2 class="mb-3" style="text-align:center;">Register</h2>
+
+        <div class="row">
+            <div class="form-floating mb-3 col-md-6">
+                <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name" required>
+                <label for="first_name">First Name</label>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+
+                <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name" required>
+                <label for="last_name">Last Name</label>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" required name="email">
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating mb-3">
+
+            <input type="tel" class="form-control" id="phoneNum" placeholder="Enter your phone" required name="phone">
+            <label for="phoneNum">Phone</label>
+        </div>
+        <div class="form-floating mb-3">
+
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required >
+            <label for="password">Password</label>
+        </div>
+        <div class="form-floating mb-3">
+
+            <input type="password" class="form-control" id="conf_pass"  name="confirm_password" placeholder="Confirm Password" required >
+             <label for="password">Confirm Password</label>
+        </div>
+        <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="address" placeholder="Password" name="address" required>
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="row mb-3">
+                    <div class=" col-md-4">
+                        <label for="state" class="form-label">City</label>
+                        <select id ="state" class="form-select" required name="city">
+
+                            </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="sts" class="form-label">State</label>
+                        <select class="form-select" onchange="print_city('state', this.selectedIndex);" id="sts" name ="stt" required>
+
+                        </select>
+                    </div>
+                        <div class="col-md-4">
+                            <label for="zipcode" class="form-label">Zip</label>
+                        <input type="tel" class="form-control" id="zipcode" placeholder="Zipcode" name="zip" required>
+
+                    </div>
+
+                    </div>
+
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </fieldset>
+    </form>
+    
+</div>
+    </div>
+</div>
+<script language="javascript">print_state("sts");</script>
+{%endblock%}

@@ -1,0 +1,31 @@
+{% extends 'restro/base.html'%}
+
+{%block body%}
+
+
+<div class="container">
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Dish</th>
+      <th scope="col">Desc</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+  {%for i in menu%}
+    <tr>
+      <td><img src="{{i.photo}}"  height="100px" width="200px"></td>
+      <td>{{i.dish}}</td>
+      <td>{{i.desc}}</td>
+      <td>Rs. {{i.price}}</td>
+    </tr>
+  {%endfor%}
+  </tbody>
+</table>
+
+</div>
+
+
+{%endblock%}

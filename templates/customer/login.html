@@ -1,0 +1,33 @@
+{%extends 'customer/base.html' %}
+
+{%block body%}
+{% if user.is_authenticated %}
+you are currently logged in
+{% else %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+    <form action="/customer/logging" method="post">{% csrf_token %}
+    <fieldset style="border:solid 1px gray; padding:20px;">
+        <h2 style="text-align:center;">Login</h2>
+        <div class="form-floating mb-3">
+
+            <input type="email" class="form-control" id="exampleInputEmail1" name="email" required placeholder="email">
+            <label for="exampleInputEmail1">Email address</label>
+        </div>
+        <div class="form-floating mb-3">
+
+            <input type="password" class="form-control" id="exampleInputPassword1" name="pass" required placeholder="password">
+            <label for="exampleInputPassword1">Password</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-2">Login</button>
+        </fieldset>
+    </form>
+</div>
+    </div>
+</div>
+{% endif %}
+{%endblock%}
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->

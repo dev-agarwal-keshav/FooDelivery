@@ -1,0 +1,165 @@
+{% extends 'valet/base.html'%} {%block cityscript%}
+<script src="https://firebasestorage.googleapis.com/v0/b/foodelivery-682b7.appspot.com/o/Js%2Fcities.js?alt=media&token=52d3dfec-a505-4493-8b2a-9aa187c801df"></script>
+{%endblock%} {%block body%}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form method="post" action="/valet/registration">{%csrf_token%}
+                <fieldset style="border:solid 1px gray; padding:20px;">
+                    <h2 class="my-2" style="text-align:center;">Valet Register</h2>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="name" name="name" required>
+                        <label for="name">Full Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" required>
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="pass" required>
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="re_pass" placeholder="Password" name="re_pass" required>
+                        <label for="re_pass">Re-enter Password</label>
+                    </div>
+
+                    <div class=" mb-3 input-group">
+                        <span class="input-group-text" id="basic-addon2">+91</span>
+                        <input type="tel" class="form-control" id="phone" placeholder="Phone" name="phone" aria-describedby="basic-addon2" required>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class=" col-md-4">
+                            <label for="state" class="form-label">City</label>
+                            <select id="state" class="form-select" required name="city">
+
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sts" class="form-label">State</label>
+                            <select class="form-select" onchange="print_city('state', this.selectedIndex);" id="sts" name="stt" required>
+
+                        </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="zipcode" class="form-label">Zip</label>
+                            <input type="tel" class="form-control" id="zipcode" placeholder="Zipcode" name="zip" required>
+
+                        </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <label for="file" class="form-label">Upload Your Image</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="file" name="file[]" id="file">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-dark" type="button" onclick="vidUp()">Upload Photo</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="url" id="url">
+
+                    <div class="row mb-3">
+                        <label for="file" class="form-label">Upload Your Aadhar</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="file" name="file1[]" id="file1">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-dark" type="button" onclick="vidUp1()">Upload Photo</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="url1" id="url1">
+                    <div class="my-2">
+                        <button class="btn btn-success" type="submit">Register</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script language="javascript">
+    print_state("sts");
+</script>
+{%endblock%} {%block js%}
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyBaBb0KYaIh9N0fBJWtG8iYFnmJg-IJLRM",
+        authDomain: "foodelivery-682b7.firebaseapp.com",
+        projectId: "foodelivery-682b7",
+        storageBucket: "foodelivery-682b7.appspot.com",
+        messagingSenderId: "720979888707",
+        appId: "1:720979888707:web:ec6c5f582cfddc462a22f6",
+        measurementId: "G-5Q0QBPT081"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    function vidUp() {
+        var storage = firebase.storage();
+        var file = document.getElementById('file').files[0];
+        var storageRef = storage.ref();
+        var lang = document.getElementsByName('email').value;
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        var uploadTask = storageRef.child('valet/dp/' + lang + '/' + file.name).put(file);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            function(snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+
+            },
+            function(error) {
+                console.log(error)
+                    // A full list of error codes is available at
+                    // https://firebase.google.com/docs/storage/web/handle-errors
+            },
+            function() {
+                // Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    console.log(downloadURL)
+                    document.getElementById('url').value = downloadURL;
+                });
+            });
+
+    }
+
+    function vidUp1() {
+        var storage = firebase.storage();
+        var file = document.getElementById('file1').files[0];
+        var storageRef = storage.ref();
+        var lang = document.getElementsByName('email').value;
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        var uploadTask = storageRef.child('valet/aadhar/' + lang + '/' + file.name).put(file);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            function(snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+
+            },
+            function(error) {
+                console.log(error)
+                    // A full list of error codes is available at
+                    // https://firebase.google.com/docs/storage/web/handle-errors
+            },
+            function() {
+                // Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    console.log(downloadURL)
+                    document.getElementById('url1').value = downloadURL;
+                });
+            });
+    }
+</script>
+{%endblock%}

@@ -1,0 +1,52 @@
+{% extends 'customer/base.html'%} {%block body%} {%if rest%}
+<div class="container my-3" style="background:#f2f2f2; padding:20px;">
+
+    <div>
+        <h2 class="offset-md-5 mb-3">Reserve Table</h2>
+        <form action="/customer/booking" method="POST">{%csrf_token%}
+            <div class="row offset-md-3">
+                <input type="hidden" name="rest" value="{{rest.id}}">
+                <div class="col-md-3">
+                    <input class="form-control" type="date" name="date" placeholder="Date of Reservation" required>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" type="time" name="time" placeholder="Time of Reservation" required>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-success" type="submit">Reserve</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{%endif%}
+<div class="container my-4">
+    <h2 class="offset-md-4 mb-3">Your Previous Reservations</h2>
+    <div>
+        <table class="table table-danger table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Restaurant</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">OTP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in reserve%}
+                <tr>
+                    <td>{{i.restro.name}}</td>
+                    <td>{{i.date}}</td>
+                    <td>{{i.time}}</td>
+                    {%if not i.complete%}
+                    <th scope="row">{{i.otp}}</th>
+                    {%else%}
+                    <td><i class="fa fa-check-circle" style="font-size:24px; color:green;"></i></td>
+                    {%endif%}
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%endblock%}

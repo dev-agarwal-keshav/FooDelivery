@@ -1,0 +1,40 @@
+{% extends 'restro/base.html'%}
+
+{%block body%}
+<div class="container">
+<h2 class="offset-md-5 my-3">Reservations</h2>
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      
+      <th scope="col">Customer Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {%for i in reserve%}
+    <tr>
+      <td>{{i.customer.user.first_name}}&nbsp;{{i.customer.user.last_name}}</td>
+      <td>{{i.date}}</td>
+      <td>{{i.time}}</td>
+      <td>
+      <form action="/restro/book/{{i.id}}" method="post">{% csrf_token %}
+      <div class="row">
+      <div class="col-md-3">
+      <input type="password" name="otp" class="form-control" placeholder="OTP">
+      </div>
+      <div class="col-md-2">
+      <button class="btn btn-danger" type="submit">Done</button>
+      </div></div>
+      </form>
+      </td>
+    </tr>
+  {%endfor%}
+  </tbody>
+</table>
+
+</div>
+
+{%endblock%}

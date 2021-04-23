@@ -1,0 +1,108 @@
+{%extends 'customer/base.html' %} {%block body%}
+<div class="container my-4">
+    <div class="col-md-6 offset-md-3">
+        <h1 class="my-4 offset-md-4">Track Order</h1>
+        {%if order%}
+        {% for i in order %}
+        <input type="hidden" value="{{i.item}}" id="itemspr{{i.id}}">
+        <div class="card mb-3">
+            <h5 class="card-header">{{i.restro.name}}<small style="text-align:right;float:right;text-size:10px;">Order on: {{i.date}}</h5></small>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            {% if i.recv_by_valet %}
+                            <h6 class="card-title">Delivered by Valet: {{i.valet.user.first_name}} {{i.valet.user.last_name}}</h6>
+                            <p>Phone Numer: +91 {{i.valet.phone}}</p>
+                            <h6>Amount to be paid: Rs. {{i.amt}}</h6>
+                            <h5>Use OTP: {{i.otp_customer}}
+
+                            </h5> {%else%}
+                            <h6 class="card-title"> Food is being prepared</h6>
+                            <p>Restaurant Phone Numer: +91 {{i.restro.phone}}<br> Valet Phone Numer: +91 {{i.valet.phone}}</p>
+                            <h6>Amount to be paid: Rs. {{i.amt}}</h6>
+                            {%endif%}
+                        </div>
+                        <div class="col-md-3 divpr">
+                            <button class="btn btn-success cart" id="pr{{i.id}}">View order
+                            </button>
+                        </div>
+                    </div>
+                    <div class=" card-text ">
+                        <ul class="list-group mb-3 " id="itpr{{i.id}}">
+                        </ul>
+                        {% if i.prepared %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="food">Food Prepared</label>
+                                <i id="food" class="fa fa-check-circle" style="font-size:18px;color:green"></i>
+                            </div>
+                            {% if i.recv_by_valet %}
+                            <div class="col-md-4">
+                                <label for="food">Valet has picked</label>
+                                <i id="food" class="fa fa-check-circle" style="font-size:18px;color:green"></i>
+                            </div>
+                            <div class="col-md-4" style="text-align: right;">
+                                <label for="valet ">Out for Delivery</label>
+                                <i id="valet " class="fa fa-motorcycle "></i>
+                            </div>
+                            {%else%}
+                            <div class="col-md-6">
+                                <label for="load">Waiting for Valet to Pick Up....</label>
+                                <div id="load " class="spinner-grow text-danger " role="status ">
+                                    <span class="visually-hidden ">Preparing...</span>
+                                </div>
+                            </div>
+                            {%endif%}
+                        </div>
+                        <small>Contact our delivery agent for further enquiry</small> {%else%}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="load">Preparing food....</label>
+                                <div id="load " class="spinner-grow text-primary " role="status ">
+                                    <span class="visually-hidden ">Preparing...</span>
+                                </div>
+                            </div>
+                        </div>
+                        {%endif%}
+                    </div>
+
+                </div>
+        </div>
+
+
+        {%endfor%}
+        {%else%}
+        <h5 class="offset-md-4">No Ongoing Order</h5>
+        {%endif%}
+    </div>
+    {%endblock%} {% block js %}
+    <script>
+        function viewCart(vert, idstr) {
+            cart = JSON.parse(vert);
+
+            mystr = ``;
+            for (var item in cart) {
+
+                let name = cart[item][1];
+                let qty = cart[item][0];
+                let itemPrice = cart[item][2];
+
+                mystr = mystr + ` <li class="list-group-item d-flex justify-content-between align-items-center">
+            ${name}
+            <span>x${qty}</span>
+          <div class="input-group-prepend">
+            <span class="input-group-text">Rs. ${itemPrice}</span>
+          </div>
+          </li>`
+            }
+            $('#it' + idstr).html(mystr);
+
+        }
+        $('.divpr').on('click', 'button.cart', function() {
+            var idstr = this.id.toString();
+            var cart = document.getElementById('items' + idstr).value;
+            viewCart(cart, idstr);
+
+        });
+    </script>
+    {%endblock%}

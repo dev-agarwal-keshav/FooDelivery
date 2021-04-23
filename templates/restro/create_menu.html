@@ -1,0 +1,84 @@
+{% extends 'restro/base.html'%}
+
+{%block body%}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+        <form method="post" action="/restro/create_menu">{%csrf_token%}
+            <fieldset style="border:solid 1px gray; padding:20px;">
+                <h2 class="my-2" style="text-align:center;" >Add Menu</h2>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="dish" placeholder="name" name="dish" required>
+                        <label for="dish">Dish Name</label>
+                    </div>
+                <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="price" placeholder="name" name="price" required>
+                        <label for="price">Price</label>
+                    </div>
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="desc" placeholder="name" name="desc" required></textarea>
+                    <label for="dish">Dish Description</label>
+                    </div>
+                <div class="row mb-3">
+                    <label for="file" class="form-label">Upload Dish Image</label>
+                    <div class="col-md-8">
+                  <input class="form-control" type="file" name="file[]" id="file">
+                    </div>
+                    <div class="col-md-4">
+                    <button class="btn btn-outline-dark" type="button" onclick="vidUp()">Upload Photo</button>
+                    </div>
+                </div>
+                 <input type="hidden" name="url" id="url">
+                <button class="btn btn-outline-info" type="submit" >Add to Menu</button>
+            </fieldset>
+        </form>
+        </div>
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+    <script>
+    var firebaseConfig = {
+    apiKey: "AIzaSyBaBb0KYaIh9N0fBJWtG8iYFnmJg-IJLRM",
+    authDomain: "foodelivery-682b7.firebaseapp.com",
+    projectId: "foodelivery-682b7",
+    storageBucket: "foodelivery-682b7.appspot.com",
+    messagingSenderId: "720979888707",
+    appId: "1:720979888707:web:ec6c5f582cfddc462a22f6",
+    measurementId: "G-5Q0QBPT081"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    function vidUp() {
+        var storage = firebase.storage();
+        var file = document.getElementById('file').files[0];
+        var storageRef = storage.ref();
+        var lang = "{{request.user.username}}";
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        var uploadTask = storageRef.child('menu/' + lang + '/' + file.name).put(file);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            function(snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+
+            },
+            function(error) {
+                console.log(error)
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+            },
+            function() {
+                // Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                   console.log(downloadURL)
+                    document.getElementById('url').value = downloadURL;
+                });
+            });
+
+    }
+    </script>
+{%endblock%}

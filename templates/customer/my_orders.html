@@ -1,0 +1,65 @@
+{%extends 'customer/base.html' %} {%block body%}
+
+<div class="container my-4">
+    <h1 style="text-align:center;">Your Orders</h1>
+    <div class="accordion" id="accordionExample">
+        {%for i in orders%}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <span class="divpr" id="divpr{{i.id}}">
+      <button class="accordion-button cart" type="button" id="pr{{i.id}}" data-bs-toggle="collapse" data-bs-target="#collapse{{i.id}}"  aria-controls="collapse{{i.id}}">
+        <h5 sty>{{i.restro.name}}</h5>&nbsp;&emsp;<small style="anchor:right;">Order on: {{i.date}}</small>
+      </button></span>
+            </h2>
+            <input type="hidden" id="itemspr{{i.id}}" value="{{i.item}}">
+            <div id="collapse{{i.id}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>{{i.date}}</p>
+                            <h6>Total Bill: Rs.{{i.amt}}</h6>
+                            {%if not i.recv_by_customer%}
+                            <a href="/customer/track" class="btn btn-info">Track my order</a> {%endif%} </div>
+                        <div class="col-md-6 ">
+                            <ul class="list-group " id="itpr{{i.id}}">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
+{%endblock%} {% block js %}
+<script>
+    function viewCart(vert, idstr) {
+        cart = JSON.parse(vert);
+        console.log(cart)
+        mystr = ``;
+        for (var item in cart) {
+
+            let name = cart[item][1];
+            let qty = cart[item][0];
+            let itemPrice = cart[item][2];
+
+            mystr = mystr + ` <li class="list-group-item d-flex justify-content-between align-items-center">
+        ${name}
+        <span>x${qty}</span>
+      <div class="input-group-prepend">
+        <span class="input-group-text">Rs. ${itemPrice}</span>
+      </div>
+      </li>`
+        }
+        $('#it' + idstr).html(mystr);
+
+    }
+    $('.divpr').on('click', 'button.cart', function() {
+        var idstr = this.id.toString();
+        var cart = document.getElementById('items' + idstr).value;
+        viewCart(cart, idstr);
+
+    });
+</script>
+{%endblock%}

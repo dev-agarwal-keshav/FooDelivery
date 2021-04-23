@@ -1,0 +1,26 @@
+{% extends 'restro/base.html'%}
+
+{%block body%}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+    <form method="post" action="/restro/logging">{%csrf_token%}
+        <fieldset style="border:solid 1px gray; padding:20px;">
+            <h2 class="my-2" style="text-align:center;" >Restaurant Login</h2>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" required>
+            <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="pass" required>
+            <label for="floatingPassword">Password</label>
+        </div>
+            <div class="my-2">
+            <button class="btn btn-success" type="submit">Login</button>
+            </div>
+        </fieldset>
+    </form>
+        </div>
+</div>
+</div>
+{%endblock%}
